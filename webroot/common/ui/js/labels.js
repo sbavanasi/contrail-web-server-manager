@@ -155,6 +155,7 @@ define([
         this.TITLE_IMAGE = 'Image';
         this.TITLE_PACKAGES = 'Packages';
         this.TITLE_PACKAGE = 'Package';
+        this.TITLE_BAREMETAL_SERVERS = 'Baremetal Servers';
 
         this.SELECT_CLUSTER = 'Select Cluster';
         this.TITLE_ADD_CLUSTER = 'Add Cluster';
@@ -182,7 +183,10 @@ define([
         this.TITLE_SEARCH_SERVERS = 'Search Servers';
         this.TITLE_FILTER_SERVERS = 'Filter Servers';
         this.TITLE_SELECT_SERVERS = 'Select Servers';
+        this.TITLE_SELECT_SERVER = 'Select Server';
         this.TITLE_SELECTED_SERVERS = 'Selected Servers';
+        this.TITLE_SERVER_DETAIL = 'Details';
+        this.TITLE_CONFIGURE_INTERFACES = 'Configure Interfaces';
 
         this.TITLE_SAVE_NEXT = 'Save &amp; Next';
         this.TITLE_NEXT = 'Next';
