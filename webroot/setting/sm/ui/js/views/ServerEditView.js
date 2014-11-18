@@ -370,42 +370,44 @@ define([
                                                 uniqueColumn: 'name',
                                                 events: {
                                                     onUpdate: function () {
-                                                        var interfaces = $('#server-interfaces-grid').data('contrailDynamicgrid')._grid.getData(),
-                                                            managementInterfacePrevData = $('#management_interface_dropdown').data('contrailDropdown').getAllData(),
-                                                            managementInterfacePrevValue = $('#management_interface_dropdown').data('contrailDropdown').value(),
-                                                            managementInterfaceData = [],
-                                                            controlDataInterfacePrevData = $('#control_data_interface_dropdown').data('contrailDropdown').getAllData(),
-                                                            controlDataInterfacePrevValue = $('#control_data_interface_dropdown').data('contrailDropdown').value(),
-                                                            controlDataInterfaceData = [],
-                                                            bondMemberInterfaces = [];
+                                                        if ($('#server-interfaces-grid').data('contrailDynamicGrid')) {
+                                                            var interfaces = $('#server-interfaces-grid').data('contrailDynamicGrid')._grid.getData(),
+                                                                managementInterfacePrevData = $('#management_interface_dropdown').data('contrailDropdown').getAllData(),
+                                                                managementInterfacePrevValue = $('#management_interface_dropdown').data('contrailDropdown').value(),
+                                                                managementInterfaceData = [],
+                                                                controlDataInterfacePrevData = $('#control_data_interface_dropdown').data('contrailDropdown').getAllData(),
+                                                                controlDataInterfacePrevValue = $('#control_data_interface_dropdown').data('contrailDropdown').value(),
+                                                                controlDataInterfaceData = [],
+                                                                bondMemberInterfaces = [];
 
-                                                        $.each(interfaces, function(interfaceKey, interfaceValue) {
-                                                            bondMemberInterfaces = bondMemberInterfaces.concat(interfaceValue.member_interfaces);
-                                                        });
+                                                            $.each(interfaces, function(interfaceKey, interfaceValue) {
+                                                                bondMemberInterfaces = bondMemberInterfaces.concat(interfaceValue.member_interfaces);
+                                                            });
 
-                                                        $.each(interfaces, function (interfaceKey, interfaceValue) {
-                                                            if (interfaceValue.name != '' && bondMemberInterfaces.indexOf(interfaceValue.name) == -1) {
-                                                                if (interfaceValue.type == 'physical' && interfaceValue.dhcp) {
-                                                                    managementInterfaceData.push({
+                                                            $.each(interfaces, function (interfaceKey, interfaceValue) {
+                                                                if (interfaceValue.name != '' && bondMemberInterfaces.indexOf(interfaceValue.name) == -1) {
+                                                                    if (interfaceValue.type == 'physical' && interfaceValue.dhcp) {
+                                                                        managementInterfaceData.push({
+                                                                            id: interfaceValue.name,
+                                                                            text: interfaceValue.name
+                                                                        });
+                                                                    }
+
+                                                                    controlDataInterfaceData.push({
                                                                         id: interfaceValue.name,
                                                                         text: interfaceValue.name
                                                                     });
                                                                 }
+                                                            });
 
-                                                                controlDataInterfaceData.push({
-                                                                    id: interfaceValue.name,
-                                                                    text: interfaceValue.name
-                                                                });
+                                                            if (JSON.stringify(managementInterfacePrevData) != JSON.stringify(managementInterfaceData)) {
+                                                                $('#management_interface_dropdown').data('contrailDropdown').setData(managementInterfaceData);
+                                                                $('#management_interface_dropdown').data('contrailDropdown').value(managementInterfacePrevValue)
                                                             }
-                                                        });
-
-                                                        if (JSON.stringify(managementInterfacePrevData) != JSON.stringify(managementInterfaceData)) {
-                                                            $('#management_interface_dropdown').data('contrailDropdown').setData(managementInterfaceData);
-                                                            $('#management_interface_dropdown').data('contrailDropdown').value(managementInterfacePrevValue)
-                                                        }
-                                                        if (JSON.stringify(controlDataInterfacePrevData) != JSON.stringify(controlDataInterfaceData)) {
-                                                            $('#control_data_interface_dropdown').data('contrailDropdown').setData(controlDataInterfaceData)
-                                                            $('#control_data_interface_dropdown').data('contrailDropdown').value(controlDataInterfacePrevValue);
+                                                            if (JSON.stringify(controlDataInterfacePrevData) != JSON.stringify(controlDataInterfaceData)) {
+                                                                $('#control_data_interface_dropdown').data('contrailDropdown').setData(controlDataInterfaceData)
+                                                                $('#control_data_interface_dropdown').data('contrailDropdown').value(controlDataInterfacePrevValue);
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -417,7 +419,7 @@ define([
                                                     formatter: ContrailGrid.Formatters.Text,
                                                     validator: function (value) {
                                                         var valid = true,
-                                                            interfaces = $('#server-interfaces-grid').data('contrailDynamicgrid')._grid.getData();
+                                                            interfaces = $('#server-interfaces-grid').data('contrailDynamicGrid')._grid.getData();
 
                                                         $.each(interfaces, function(interfaceKey, interfaceValue) {
                                                             if (interfaceValue.name == value) {
@@ -474,7 +476,7 @@ define([
                                                     width: 45,
                                                     editor: ContrailGrid.Editors.Checkbox,
                                                     editEnabler: function(item) {
-                                                        var interfaces = $('#server-interfaces-grid').data('contrailDynamicgrid')._grid.getData(),
+                                                        var interfaces = $('#server-interfaces-grid').data('contrailDynamicGrid')._grid.getData(),
                                                             disableFlag = true;
                                                         $.each(interfaces, function(interfaceKey, interfaceValue) {
                                                             if (interfaceValue.member_interfaces != null && interfaceValue.member_interfaces.indexOf(item.name) != -1) {
@@ -604,9 +606,13 @@ define([
 
                                                 setTimeout(function(){
                                                     $('#management_interface_dropdown').data('contrailDropdown').setData(managementInterfaces);
-                                                    $('#management_interface_dropdown').data('contrailDropdown').value(managementInterfaceValue)
+                                                    $('#management_interface_dropdown').data('contrailDropdown').value(managementInterfaceValue);
+                                                    serverModel.attributes.network.management_interface = managementInterfaceValue
+
                                                     $('#control_data_interface_dropdown').data('contrailDropdown').setData(controlDataInterfaces);
-                                                    $('#control_data_interface_dropdown').data('contrailDropdown').value(controlDataInterfaceValue)
+                                                    $('#control_data_interface_dropdown').data('contrailDropdown').value(controlDataInterfaceValue);
+                                                    serverModel.attributes.contrail.control_data_interface = controlDataInterfaceValue;
+
                                                 }, 1000);
                                             }
                                         }

@@ -78,23 +78,25 @@ define([
 
             grid.gotoCell(data.length, 0, true);
 
-            $('#' + elId).data('contrailDynamicgrid', {
+            $('#' + elId).data('contrailDynamicGrid', {
                 _grid: grid
             })
 
             grid.onAddNewRow.subscribe(function (e, args) {
-                var thisGrid = $('#' + elId).data('contrailDynamicgrid')._grid;
-                if(contrail.checkIfExist(args.item[options.uniqueColumn]) && args.item[options.uniqueColumn] != '') {
-                    var item = $.extend(true, {}, defaultDataItem, args.item);
+                if (contrail.checkIfExist($('#' + elId).data('contrailDynamicGrid'))) {
+                    var thisGrid = $('#' + elId).data('contrailDynamicGrid')._grid;
+                    if(contrail.checkIfExist(args.item[options.uniqueColumn]) && args.item[options.uniqueColumn] != '') {
+                        var item = $.extend(true, {}, defaultDataItem, args.item);
 
-                    thisGrid.invalidateRow(data.length);
-                    data.push(item);
-                    thisGrid.updateRowCount();
-                    thisGrid.render();
-                    thisGrid.gotoCell(data.length, 0, true);
-                } else {
-                    thisGrid.invalidateRow(data.length);
-                    thisGrid.render();
+                        thisGrid.invalidateRow(data.length);
+                        data.push(item);
+                        thisGrid.updateRowCount();
+                        thisGrid.render();
+                        thisGrid.gotoCell(data.length, 0, true);
+                    } else {
+                        thisGrid.invalidateRow(data.length);
+                        thisGrid.render();
+                    }
                 }
             });
 
@@ -109,25 +111,29 @@ define([
             $('#' + elId)
                 .off('click', 'i.row-add')
                 .on('click', 'i.row-add', function() {
-                    var rowIndex = $(this).data('row'),
-                        thisGrid = $('#' + elId).data('contrailDynamicgrid')._grid;
+                    if (contrail.checkIfExist($('#' + elId).data('contrailDynamicGrid'))) {
+                        var rowIndex = $(this).data('row'),
+                            thisGrid = $('#' + elId).data('contrailDynamicGrid')._grid;
 
-                    data.splice((rowIndex + 1), 0, $.extend(true, {}, defaultDataItem));
-                    thisGrid.setData(data);
-                    thisGrid.gotoCell((rowIndex + 1), 0, true);
+                        data.splice((rowIndex + 1), 0, $.extend(true, {}, defaultDataItem));
+                        thisGrid.setData(data);
+                        thisGrid.gotoCell((rowIndex + 1), 0, true);
+                    }
                 });
 
             $('#' + elId)
                 .off('click', 'i.row-remove')
                 .on('click', 'i.row-remove', function() {
-                    var rowIndex = $(this).data('row'),
-                        thisGrid = $('#' + elId).data('contrailDynamicgrid')._grid;
+                    if (contrail.checkIfExist($('#' + elId).data('contrailDynamicGrid'))) {
+                        var rowIndex = $(this).data('row'),
+                            thisGrid = $('#' + elId).data('contrailDynamicGrid')._grid;
 
-                    data.splice(rowIndex, 1);
-                    thisGrid.setData(data);
+                        data.splice(rowIndex, 1);
+                        thisGrid.setData(data);
 
-                    if (contrail.checkIfFunction(options.events.onUpdate)) {
-                        options.events.onUpdate();
+                        if (contrail.checkIfFunction(options.events.onUpdate)) {
+                            options.events.onUpdate();
+                        }
                     }
                 });
 
